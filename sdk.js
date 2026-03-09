@@ -3,29 +3,27 @@ const sitemapConfig = {
   global: {
     onActionEvent: function (event) {
 
-      event.pageUrl = window.location.href;
+      event.eventId = Date.now().toString();
       event.pageName = document.title;
-      event.referrer = document.referrer;
-      event.browser = navigator.userAgent;
+      event.pageUrl = window.location.href;
+      event.eventDate = new Date().toISOString();
 
       return event;
     }
   },
 
   pageTypes: [
-
     {
-      name: "Home Page",
+      name: "Website Page",
       interaction: {
-        name: "ViewPage"
+        name: "WebsitePageView"
       },
-      isMatch: () =>
-        window.location.pathname === "/" ||
-        window.location.pathname.includes("Data-Cloud-Connection")
-    }
 
+      isMatch: () => true
+    }
   ]
 };
 
 SalesforceInteractions.initSitemap(sitemapConfig);
 </script>
+
