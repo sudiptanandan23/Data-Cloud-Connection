@@ -1,29 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - My Website</title>
-    <link rel="stylesheet" href="style.css">
-	<script src="https://cdn.c360a.salesforce.com/beacon/c360a/775e3ef8-c027-4b84-8c7c-661c05297a7f/scripts/c360a.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home - My Website</title>
+
+<link rel="stylesheet" href="style.css">
+
+<!-- Salesforce Data Cloud Web SDK -->
+<script src="https://cdn.c360a.salesforce.com/beacon/c360a/775e3ef8-c027-4b84-8c7c-661c05297a7f/scripts/c360a.min.js"></script>
+
+<script>
+
+/* Wait until SDK loads */
+document.addEventListener("DOMContentLoaded", function () {
+
+const sitemapConfig = {
+
+global: {
+onActionEvent: function (event) {
+console.log("Data Cloud Event Sent:", event);
+return event;
+}
+},
+
+pageTypes: [
+
+{
+name: "home_page",
+isMatch: function () {
+return window.location.pathname.includes("index.html") ||
+window.location.pathname === "/";
+},
+
+interaction: {
+name: "Home Page View"
+}
+
+},
+
+{
+name: "about_page",
+isMatch: function () {
+return window.location.pathname.includes("about");
+},
+
+interaction: {
+name: "About Page View"
+}
+
+},
+
+{
+name: "contact_page",
+isMatch: function () {
+return window.location.pathname.includes("contact");
+},
+
+interaction: {
+name: "Contact Page View"
+}
+
+}
+
+]
+
+};
+
+/* Initialize Salesforce Interaction */
+
+if (window.SalesforceInteractions) {
+
+SalesforceInteractions.init({
+cookieDomain: window.location.hostname,
+sitemapConfig: sitemapConfig
+});
+
+}
+
+/* Send Test Event */
+
+setTimeout(function(){
+
+if (window.SalesforceInteractions) {
+
+SalesforceInteractions.sendEvent({
+interaction: {
+name: "Website Visit Test"
+}
+});
+
+}
+
+},2000);
+
+});
+
+</script>
+
 </head>
+
 <body>
-    <header>
-        <h1>Welcome to My Website</h1>
-    </header>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-    </nav>
-    <div class="container">
-        <section>
-            <h2>Home</h2>
-            <p>This is the home page of your multi-page website.</p>
-        </section>
-    </div>
-    <footer>
-        &copy; 2026 Your Name. All rights reserved.
-    </footer>
+
+<header>
+<h1>Welcome to My Website</h1>
+</header>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+</nav>
+
+<div class="container">
+
+<section>
+<h2>Home</h2>
+<p>This is the home page of your multi-page website.</p>
+</section>
+
+</div>
+
+<footer>
+&copy; 2026 Your Name. All rights reserved.
+</footer>
+
 </body>
 </html>
