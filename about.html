@@ -1,29 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - My Website</title>
-    <link rel="stylesheet" href="style.css">
-		<script src="https://cdn.c360a.salesforce.com/beacon/c360a/775e3ef8-c027-4b84-8c7c-661c05297a7f/scripts/c360a.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About - My Website</title>
+
+<link rel="stylesheet" href="style.css">
+
+<!-- Salesforce Data Cloud Web SDK -->
+<script src="https://cdn.c360a.salesforce.com/beacon/c360a/775e3ef8-c027-4b84-8c7c-661c05297a7f/scripts/c360a.min.js"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+const sitemapConfig = {
+
+global: {
+onActionEvent: function (event) {
+console.log("Data Cloud Event Sent:", event);
+return event;
+}
+},
+
+pageTypes: [
+
+{
+name: "about_page",
+
+isMatch: function () {
+return window.location.pathname.includes("about");
+},
+
+interaction: {
+name: "About Page View"
+}
+
+}
+
+]
+
+};
+
+/* Initialize Salesforce Interaction */
+
+if (window.SalesforceInteractions) {
+
+SalesforceInteractions.init({
+cookieDomain: window.location.hostname,
+sitemapConfig: sitemapConfig
+});
+
+}
+
+/* Send About Page Event */
+
+setTimeout(function(){
+
+if (window.SalesforceInteractions) {
+
+SalesforceInteractions.sendEvent({
+
+interaction: {
+name: "About Page Visit"
+}
+
+});
+
+}
+
+},2000);
+
+});
+
+</script>
+
 </head>
+
 <body>
-    <header>
-        <h1>About Us</h1>
-    </header>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-    </nav>
-    <div class="container">
-        <section>
-            <h2>About</h2>
-            <p>Write something about yourself or your website here.</p>
-        </section>
-    </div>
-    <footer>
-        &copy; 2026 Your Name. All rights reserved.
-    </footer>
+
+<header>
+<h1>About Us</h1>
+</header>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+</nav>
+
+<div class="container">
+
+<section>
+
+<h2>About</h2>
+
+<p>Write something about yourself or your website here.</p>
+
+</section>
+
+</div>
+
+<footer>
+&copy; 2026 Your Name. All rights reserved.
+</footer>
+
 </body>
 </html>
