@@ -10,70 +10,8 @@
 <!-- Salesforce Data Cloud Web SDK -->
 <script src="https://cdn.c360a.salesforce.com/beacon/c360a/775e3ef8-c027-4b84-8c7c-661c05297a7f/scripts/c360a.min.js"></script>
 
-<script>
-
-document.addEventListener("DOMContentLoaded", function () {
-
-const sitemapConfig = {
-
-global: {
-onActionEvent: function (event) {
-console.log("Data Cloud Event Sent:", event);
-return event;
-}
-},
-
-pageTypes: [
-
-{
-name: "contact_page",
-
-isMatch: function () {
-return window.location.pathname.includes("contact");
-},
-
-interaction: {
-name: "Contact Page View"
-}
-
-}
-
-]
-
-};
-
-/* Initialize Salesforce Interaction */
-
-if (window.SalesforceInteractions) {
-
-SalesforceInteractions.init({
-cookieDomain: window.location.hostname,
-sitemapConfig: sitemapConfig
-});
-
-}
-
-/* Send Contact Page Event */
-
-setTimeout(function(){
-
-if (window.SalesforceInteractions) {
-
-SalesforceInteractions.sendEvent({
-
-interaction: {
-name: "Contact Page Visit"
-}
-
-});
-
-}
-
-},2000);
-
-});
-
-</script>
+<!-- Sitemap Tracking -->
+<script src="sitemap.js"></script>
 
 </head>
 
@@ -93,9 +31,7 @@ name: "Contact Page Visit"
 
 <section>
 <h2>Contact</h2>
-
 <p>Email: yourname@example.com</p>
-
 </section>
 
 </div>
