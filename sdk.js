@@ -1,4 +1,4 @@
-<script>
+
 const sitemapConfig = {
   global: {
     onActionEvent: function (event) {
@@ -50,4 +50,5 @@ const sitemapConfig = {
 };
 
 SalesforceInteractions.initSitemap(sitemapConfig);
-</script>
+
+
