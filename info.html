@@ -6,7 +6,31 @@
 <!-- Salesforce Data Cloud SDK -->
 <script src="https://cdn.c360a.salesforce.com/beacon/c360a/69c0fb79-bdf0-4fa4-ba65-9add3e7b5592/scripts/c360a.min.js"></script>
 <script src="sdk.js"></script>
+    <script>
+SalesforceInteractions.init({    
 
+    cookieDomain: "https://sudiptanandan23.github.io/Data-Cloud-Connection",
+
+    consents:[
+
+        {
+
+            status: SalesforceInteractions.ConsentStatus.OptIn,
+
+            purpose: SalesforceInteractions.ConsentPurpose.Tracking,
+
+            provider: 'Test Provider'
+
+        }
+
+    ]
+
+}).then(() => {
+
+    console.log('Salesforce Interactions Web SDK init is successfull - head - Start');
+
+})
+</script> 
 <style>
 
 body{
