@@ -1,28 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>CTA Profile Viewer</title>
 
 <!-- Salesforce Data Cloud SDK -->
 <script src="https://cdn.c360a.salesforce.com/beacon/c360a/69c0fb79-bdf0-4fa4-ba65-9add3e7b5592/scripts/c360a.min.js"></script>
 <script src="sdk.js"></script>
-    <script>
-SalesforceInteractions.init({    
-    cookieDomain: "https://sudiptanandan23.github.io/Data-Cloud-Connection",
-    consents:[
-        {
-            status: SalesforceInteractions.ConsentStatus.OptIn,
-            purpose: SalesforceInteractions.ConsentPurpose.Tracking,
-            provider: 'Test Provider'
-        }
-    ]
 
-}).then(() => {
-
-    console.log('Salesforce Interactions Web SDK init is successfull - head - Start');
-
-})
-</script> 
 <style>
 
 body{
@@ -36,8 +21,6 @@ h1{
     margin-bottom:30px;
 }
 
-/* Buttons */
-
 .btn{
     padding:12px 24px;
     margin:10px;
@@ -49,14 +32,10 @@ h1{
     cursor:pointer;
 }
 
-/* Active tab */
-
 .btn.active{
     background:#0070d2;
     color:white;
 }
-
-/* Table */
 
 .table-container{
     margin-top:40px;
@@ -86,14 +65,24 @@ th{
 
 SalesforceInteractions.setLoggingLevel('DEBUG');
 
+/* Initialize SDK ONLY ONCE */
+
 SalesforceInteractions.init({
-  consents:[
-    {
-      status: SalesforceInteractions.ConsentStatus.OptIn,
-      purpose: SalesforceInteractions.ConsentPurpose.Tracking,
-      provider: 'Test Provider'
-    }
-  ]
+
+cookieDomain: "github.io",
+
+consents:[
+{
+status: SalesforceInteractions.ConsentStatus.OptIn,
+purpose: SalesforceInteractions.ConsentPurpose.Tracking,
+provider:"Website"
+}
+]
+
+}).then(()=>{
+
+console.log("Salesforce Data Cloud SDK initialized");
+
 });
 
 </script>
@@ -161,22 +150,22 @@ const button = event.target;
 const interactionName = button.innerText;
 const eventId = button.id;
 
-/* Make clicked button active */
+/* Active Tab */
+
 document.querySelectorAll(".btn").forEach(btn=>{
-    btn.classList.remove("active");
+btn.classList.remove("active");
 });
 
 button.classList.add("active");
 
+/* Get IDs from Salesforce SDK */
 
-const deviceId = localStorage.getItem('deviceId') || "device-"+Date.now();
-localStorage.setItem("deviceId",deviceId);
-
-const sessionId = sessionStorage.getItem('sessionId') || "session-"+Date.now();
-sessionStorage.setItem("sessionId",sessionId);
+const deviceId = SalesforceInteractions.getDeviceId();
+const sessionId = SalesforceInteractions.getSessionId();
 
 const dateTime = new Date().toISOString();
 
+/* Send event to Data Cloud */
 
 SalesforceInteractions.sendEvent({
 
@@ -185,17 +174,18 @@ name:"CTA_Click"
 },
 
 eventId:eventId,
-interactionName:interactionName,
 deviceId:deviceId,
 sessionId:sessionId,
+interactionName:interactionName,
 sourceUrl:window.location.href,
 sourceUrlReferrer:document.referrer,
 dateTime:dateTime
 
 });
 
+console.log("CTA Event Sent");
 
-/* Show table */
+/* Show profile table */
 
 document.getElementById("profileTable").style.display="block";
 
@@ -207,6 +197,8 @@ document.getElementById("interactionName").innerText=interactionName;
 document.getElementById("dateTime").innerText=dateTime;
 
 }
+
+/* Add event listeners */
 
 document.getElementById("ctaGoogle").addEventListener("click",trackCTA);
 document.getElementById("ctaYahoo").addEventListener("click",trackCTA);
