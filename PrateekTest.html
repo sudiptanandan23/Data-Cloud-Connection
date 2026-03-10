@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CTA Links Page</title>
+<style>
+    body{
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 100px;
+    }
+    .btn{
+        padding: 12px 24px;
+        margin: 12px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+</style>
+<!-- Salesforce Data Cloud SDK (replace YOUR-ACCOUNT-ID) -->
+<script src="https://cdn.c360a.salesforce.com/beacon/c360a/69c0fb79-bdf0-4fa4-ba65-9add3e7b5592/scripts/c360a.min.js"></script>
+<script>
+      SalesforceInteractions.setLoggingLevel('DEBUG');
+    SalesforceInteractions.init({
+      consents:[
+        {
+          status: SalesforceInteractions.ConsentStatus.OptIn,
+          purpose: SalesforceInteractions.ConsentPurpose.Tracking,
+          provider: 'Test Provider'
+        }
+      ]
+    });
+</script>
+</head>
+<body>
+<h1>Simple CTA Buttons</h1>
+<button id="ctaGoogle" class="btn" data-url="#">Go to Google</button>
+<button id="ctaYahoo" class="btn" data-url="https://www.yahoo.com">Go to Yahoo</button>
+<button id="ctaBing" class="btn" data-url="https://www.bing.com">Go to Bing</button>
+<script>
+  function trackCTA(event) {
+    const button = event.target;
+    const eventId = button.id;
+    const interactionName = button.innerText;
+    const destinationUrl = button.getAttribute('data-url');
+console.log("Tracking CTA:", eventId, interactionName, destinationUrl);
+    // Send event to Salesforce Data Cloud
+    SalesforceInteractions.sendEvent({
+      interaction: {
+        name: "CTA_Click",
+        catalogObject: {
+          type: "CTA",
+          id: eventId,
+          attributes: {
+            name: interactionName,
+            destinationUrl: destinationUrl,
+            sourceUrl: window.location.href,
+            sourceUrlReferrer: document.referrer,
+            dateTime: new Date().toISOString(),
+            sessionId: sessionStorage.getItem('sessionId') || 'session-xyz',
+            deviceId: localStorage.getItem('deviceId') || 'device-abc'
+          }
+        }
+      }
+    });
+    // Optional: Delay navigation to ensure tracking
+    event.preventDefault();
+    setTimeout(() => { window.location.href = destinationUrl; }, 200);
+  }
+  document.getElementById('ctaGoogle').addEventListener('click', trackCTA);
+  document.getElementById('ctaYahoo').addEventListener('click', trackCTA);
+  document.getElementById('ctaBing').addEventListener('click', trackCTA);
+</script>
+</body>
+</html>
