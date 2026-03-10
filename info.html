@@ -1,202 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>CTA Profile Viewer</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>User Info - Data Cloud Demo</title>
+
+<link rel="stylesheet" href="style.css">
 
 <!-- Salesforce Data Cloud SDK -->
 <script src="https://cdn.c360a.salesforce.com/beacon/c360a/69c0fb79-bdf0-4fa4-ba65-9add3e7b5592/scripts/c360a.min.js"></script>
+
 <script src="sdk.js"></script>
-
-<style>
-
-body{
-    font-family: Arial, sans-serif;
-    background:#f5f7fb;
-    text-align:center;
-    margin-top:60px;
-}
-
-h1{
-    margin-bottom:30px;
-}
-
-/* Buttons */
-
-.btn{
-    padding:12px 24px;
-    margin:10px;
-    font-size:16px;
-    border:none;
-    background:#c9d6e5;
-    color:#333;
-    border-radius:6px;
-    cursor:pointer;
-}
-
-/* Active tab */
-
-.btn.active{
-    background:#0070d2;
-    color:white;
-}
-
-/* Table */
-
-.table-container{
-    margin-top:40px;
-    display:none;
-}
-
-table{
-    margin:auto;
-    border-collapse:collapse;
-    width:60%;
-    background:white;
-}
-
-th, td{
-    padding:12px;
-    border:1px solid #ddd;
-}
-
-th{
-    background:#0070d2;
-    color:white;
-}
-
-</style>
-
-<script>
-
-SalesforceInteractions.setLoggingLevel('DEBUG');
-
-SalesforceInteractions.init({
-  consents:[
-    {
-      status: SalesforceInteractions.ConsentStatus.OptIn,
-      purpose: SalesforceInteractions.ConsentPurpose.Tracking,
-      provider: 'Test Provider'
-    }
-  ]
-});
-
-</script>
 
 </head>
 
 <body>
 
-<h1>Customer Profile Viewer</h1>
+<header>
+<h1>User Information</h1>
+</header>
 
-<button id="ctaGoogle" class="btn">Google Profile</button>
-<button id="ctaYahoo" class="btn">Yahoo Profile</button>
-<button id="ctaBing" class="btn">Bing Profile</button>
+<nav>
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+<a class="active" href="info.html">Info</a>
+</nav>
 
-<div id="profileTable" class="table-container">
+<div class="container">
 
-<h2>Profile Information</h2>
+<h2>Submit Your Information</h2>
 
-<table>
+<form id="infoForm">
 
-<tr>
-<th>Field</th>
-<th>Value</th>
-</tr>
+<label>First Name</label>
+<input type="text" id="firstName" required>
 
-<tr>
-<td>Device ID</td>
-<td id="deviceId"></td>
-</tr>
+<label>Last Name</label>
+<input type="text" id="lastName" required>
 
-<tr>
-<td>Session ID</td>
-<td id="sessionId"></td>
-</tr>
+<label>Email</label>
+<input type="email" id="email" required>
 
-<tr>
-<td>Page URL</td>
-<td id="sourceUrl"></td>
-</tr>
+<label>Phone</label>
+<input type="text" id="phone">
 
-<tr>
-<td>Referrer</td>
-<td id="referrer"></td>
-</tr>
+<button type="submit">Submit</button>
 
-<tr>
-<td>Interaction</td>
-<td id="interactionName"></td>
-</tr>
-
-<tr>
-<td>Date Time</td>
-<td id="dateTime"></td>
-</tr>
-
-</table>
+</form>
 
 </div>
 
 <script>
 
-function trackCTA(event){
+document.getElementById("infoForm").addEventListener("submit", function(e){
 
-const button = event.target;
-const interactionName = button.innerText;
-const eventId = button.id;
+e.preventDefault();
 
-/* Make clicked button active */
-document.querySelectorAll(".btn").forEach(btn=>{
-    btn.classList.remove("active");
-});
+const eventPayload = {
 
-button.classList.add("active");
-
-
-const deviceId = localStorage.getItem('deviceId') || "device-"+Date.now();
-localStorage.setItem("deviceId",deviceId);
-
-const sessionId = sessionStorage.getItem('sessionId') || "session-"+Date.now();
-sessionStorage.setItem("sessionId",sessionId);
-
-const dateTime = new Date().toISOString();
-
-
-SalesforceInteractions.sendEvent({
-
-interaction:{
-name:"CTA_Click"
+interaction: {
+name: "UserInfoSubmit"
 },
 
-eventId:eventId,
-interactionName:interactionName,
-deviceId:deviceId,
-sessionId:sessionId,
-sourceUrl:window.location.href,
-sourceUrlReferrer:document.referrer,
-dateTime:dateTime
+eventId: Date.now().toString(),
 
-});
+eventType: "UserSubmit",
 
+category: "Profile",
 
-/* Show table */
+dateTime: new Date().toISOString(),
 
-document.getElementById("profileTable").style.display="block";
+deviceId: SalesforceInteractions.getDeviceId(),
 
-document.getElementById("deviceId").innerText=deviceId;
-document.getElementById("sessionId").innerText=sessionId;
-document.getElementById("sourceUrl").innerText=window.location.href;
-document.getElementById("referrer").innerText=document.referrer || "Direct";
-document.getElementById("interactionName").innerText=interactionName;
-document.getElementById("dateTime").innerText=dateTime;
+sessionId: SalesforceInteractions.getSessionId(),
+
+interactionName: "UserInfoSubmit",
+
+sourceUrl: window.location.href,
+
+sourceChannel: "Web",
+
+attributes: {
+
+firstName: document.getElementById("firstName").value,
+lastName: document.getElementById("lastName").value,
+email: document.getElementById("email").value,
+phoneNumber: document.getElementById("phone").value
 
 }
 
-document.getElementById("ctaGoogle").addEventListener("click",trackCTA);
-document.getElementById("ctaYahoo").addEventListener("click",trackCTA);
-document.getElementById("ctaBing").addEventListener("click",trackCTA);
+};
+
+SalesforceInteractions.sendEvent(eventPayload);
+
+alert("Information submitted successfully!");
+
+});
 
 </script>
+
+<footer>
+&copy; 2026 Data Cloud Demo
+</footer>
 
 </body>
 </html>
