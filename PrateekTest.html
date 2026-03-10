@@ -46,7 +46,7 @@ console.log("Tracking CTA:", eventId, interactionName, destinationUrl);
     SalesforceInteractions.sendEvent({
       interaction: {
         name: "CTA_Click",
-        catalogObject: {
+        websitePageViewObject: {
           type: "CTA",
           id: eventId,
           attributes: {
