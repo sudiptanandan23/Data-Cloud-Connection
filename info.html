@@ -20,20 +20,27 @@ h1{
     margin-bottom:30px;
 }
 
+/* Buttons */
+
 .btn{
     padding:12px 24px;
     margin:10px;
     font-size:16px;
     border:none;
-    background:#0070d2;
-    color:white;
+    background:#c9d6e5;
+    color:#333;
     border-radius:6px;
     cursor:pointer;
 }
 
-.btn:hover{
-    background:#005fb2;
+/* Active tab */
+
+.btn.active{
+    background:#0070d2;
+    color:white;
 }
+
+/* Table */
 
 .table-container{
     margin-top:40px;
@@ -81,15 +88,16 @@ SalesforceInteractions.init({
 
 <h1>Customer Profile Viewer</h1>
 
-<button id="ctaGoogle" class="btn">Load Google Profile</button>
-<button id="ctaYahoo" class="btn">Load Yahoo Profile</button>
-<button id="ctaBing" class="btn">Load Bing Profile</button>
+<button id="ctaGoogle" class="btn">Google Profile</button>
+<button id="ctaYahoo" class="btn">Yahoo Profile</button>
+<button id="ctaBing" class="btn">Bing Profile</button>
 
 <div id="profileTable" class="table-container">
 
 <h2>Profile Information</h2>
 
 <table>
+
 <tr>
 <th>Field</th>
 <th>Value</th>
@@ -137,6 +145,14 @@ const button = event.target;
 const interactionName = button.innerText;
 const eventId = button.id;
 
+/* Make clicked button active */
+document.querySelectorAll(".btn").forEach(btn=>{
+    btn.classList.remove("active");
+});
+
+button.classList.add("active");
+
+
 const deviceId = localStorage.getItem('deviceId') || "device-"+Date.now();
 localStorage.setItem("deviceId",deviceId);
 
@@ -145,9 +161,7 @@ sessionStorage.setItem("sessionId",sessionId);
 
 const dateTime = new Date().toISOString();
 
-console.log("Tracking CTA:", eventId);
 
-// Send Event to Data Cloud
 SalesforceInteractions.sendEvent({
 
 interaction:{
@@ -164,7 +178,9 @@ dateTime:dateTime
 
 });
 
-// Show Table
+
+/* Show table */
+
 document.getElementById("profileTable").style.display="block";
 
 document.getElementById("deviceId").innerText=deviceId;
