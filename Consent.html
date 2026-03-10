@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Salesforce Data Cloud Web Tracking</title>
+
+    <!-- Salesforce Interactions Web SDK -->
+    <script src="https://cdn.c360a.salesforce.com/beacon/c360a/37350531-11e8-4591-a7b6-643ba484d8c5/scripts/c360a.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    SalesforceInteractions.init({
+        cookieDomain: "sudiptanandan23.github.io"
+    }).then(() => {
+
+        console.log("Salesforce Interactions SDK Initialized");
+
+        /* Send Consent to Data Cloud */
+        SalesforceInteractions.updateConsents([
+            {
+                status: SalesforceInteractions.ConsentStatus.OptIn,
+                purpose: SalesforceInteractions.ConsentPurpose.Tracking,
+                provider: "Website Consent Banner"
+            }
+        ]);
+
+        /* Send Page View Event */
+        SalesforceInteractions.sendEvent({
+            interaction: {
+                name: "Web Page View"
+            }
+        });
+
+    });
+
+});
+</script>
+
+</head>
+
+<body>
+
+<h2>Salesforce Data Cloud Tracking Demo</h2>
+
+<br><br>
+
+<input type="email" id="email" placeholder="Enter Email">
+
+<button onclick="identifyUser()">Submit</button>
+
+<script>
+
+function identifyUser(){
+
+    const email = document.getElementById("email").value;
+
+    SalesforceInteractions.sendEvent({
+
+        interaction:{
+            name:"User Identification"
+        },
+
+        user:{
+            identities:{
+                email: email
+            }
+        }
+
+    });
+
+    alert("Identity Sent to Data Cloud");
+
+}
+
+</script>
+
+</body>
+</html>
