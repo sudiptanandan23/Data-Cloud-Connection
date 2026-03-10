@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CTA Profile Viewer</title>
+
+<!-- Salesforce Data Cloud SDK -->
+<script src="https://cdn.c360a.salesforce.com/beacon/c360a/69c0fb79-bdf0-4fa4-ba65-9add3e7b5592/scripts/c360a.min.js"></script>
+<script src="sdk.js"></script>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f5f7fb;
+    text-align:center;
+    margin-top:60px;
+}
+
+h1{
+    margin-bottom:30px;
+}
+
+.btn{
+    padding:12px 24px;
+    margin:10px;
+    font-size:16px;
+    border:none;
+    background:#0070d2;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.btn:hover{
+    background:#005fb2;
+}
+
+.table-container{
+    margin-top:40px;
+    display:none;
+}
+
+table{
+    margin:auto;
+    border-collapse:collapse;
+    width:60%;
+    background:white;
+}
+
+th, td{
+    padding:12px;
+    border:1px solid #ddd;
+}
+
+th{
+    background:#0070d2;
+    color:white;
+}
+
+</style>
+
+<script>
+
+SalesforceInteractions.setLoggingLevel('DEBUG');
+
+SalesforceInteractions.init({
+  consents:[
+    {
+      status: SalesforceInteractions.ConsentStatus.OptIn,
+      purpose: SalesforceInteractions.ConsentPurpose.Tracking,
+      provider: 'Test Provider'
+    }
+  ]
+});
+
+</script>
+
+</head>
+
+<body>
+
+<h1>Customer Profile Viewer</h1>
+
+<button id="ctaGoogle" class="btn">Load Google Profile</button>
+<button id="ctaYahoo" class="btn">Load Yahoo Profile</button>
+<button id="ctaBing" class="btn">Load Bing Profile</button>
+
+<div id="profileTable" class="table-container">
+
+<h2>Profile Information</h2>
+
+<table>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+
+<tr>
+<td>Device ID</td>
+<td id="deviceId"></td>
+</tr>
+
+<tr>
+<td>Session ID</td>
+<td id="sessionId"></td>
+</tr>
+
+<tr>
+<td>Page URL</td>
+<td id="sourceUrl"></td>
+</tr>
+
+<tr>
+<td>Referrer</td>
+<td id="referrer"></td>
+</tr>
+
+<tr>
+<td>Interaction</td>
+<td id="interactionName"></td>
+</tr>
+
+<tr>
+<td>Date Time</td>
+<td id="dateTime"></td>
+</tr>
+
+</table>
+
+</div>
+
+<script>
+
+function trackCTA(event){
+
+const button = event.target;
+const interactionName = button.innerText;
+const eventId = button.id;
+
+const deviceId = localStorage.getItem('deviceId') || "device-"+Date.now();
+localStorage.setItem("deviceId",deviceId);
+
+const sessionId = sessionStorage.getItem('sessionId') || "session-"+Date.now();
+sessionStorage.setItem("sessionId",sessionId);
+
+const dateTime = new Date().toISOString();
+
+console.log("Tracking CTA:", eventId);
+
+// Send Event to Data Cloud
+SalesforceInteractions.sendEvent({
+
+interaction:{
+name:"CTA_Click"
+},
+
+eventId:eventId,
+interactionName:interactionName,
+deviceId:deviceId,
+sessionId:sessionId,
+sourceUrl:window.location.href,
+sourceUrlReferrer:document.referrer,
+dateTime:dateTime
+
+});
+
+// Show Table
+document.getElementById("profileTable").style.display="block";
+
+document.getElementById("deviceId").innerText=deviceId;
+document.getElementById("sessionId").innerText=sessionId;
+document.getElementById("sourceUrl").innerText=window.location.href;
+document.getElementById("referrer").innerText=document.referrer || "Direct";
+document.getElementById("interactionName").innerText=interactionName;
+document.getElementById("dateTime").innerText=dateTime;
+
+}
+
+document.getElementById("ctaGoogle").addEventListener("click",trackCTA);
+document.getElementById("ctaYahoo").addEventListener("click",trackCTA);
+document.getElementById("ctaBing").addEventListener("click",trackCTA);
+
+</script>
+
+</body>
+</html>
