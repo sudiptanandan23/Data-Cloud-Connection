@@ -16,7 +16,7 @@
     }
 </style>
 <!-- Salesforce Data Cloud SDK (replace YOUR-ACCOUNT-ID) -->
-<script src="https://cdn.c360a.salesforce.com/beacon/c360a/69c0fb79-bdf0-4fa4-ba65-9add3e7b5592/scripts/c360a.min.js"></script>
+<script src="https://cdn.c360a.salesforce.com/beacon/c360a/fcee2a7a-0291-46dc-a8f3-d56ffedda29d/scripts/c360a.min.js"></script>
 <script>
       SalesforceInteractions.setLoggingLevel('DEBUG');
     SalesforceInteractions.init({
@@ -46,7 +46,7 @@ console.log("Tracking CTA:", eventId, interactionName, destinationUrl);
     SalesforceInteractions.sendEvent({
       interaction: {
         name: "CTA_Click",
-        websitePageViewObject: {
+        catalogObject: {
           type: "CTA",
           id: eventId,
           attributes: {
