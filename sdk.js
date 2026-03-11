@@ -6,17 +6,17 @@ let deviceId;
 let sessionId;
 let pageStartTime = Date.now();
 
-/* --------------------------
-COOKIE BANNER ELEMENTS
--------------------------- */
+/* COOKIE BANNER */
 
 const banner = document.getElementById("cookieBanner");
 const acceptBtn = document.getElementById("acceptCookies");
 const rejectBtn = document.getElementById("rejectCookies");
 
-/* --------------------------
-INITIALIZE SDK
--------------------------- */
+/* PROFILE TABLE */
+
+const profileTable = document.getElementById("profileTable");
+
+/* INITIALIZE SDK */
 
 SalesforceInteractions.init({
 
@@ -32,34 +32,23 @@ provider:"Website"
 
 console.log("SDK Initialized");
 
-/* CHECK STORED CONSENT */
-
 let storedConsent = localStorage.getItem("userConsent");
 
 if(!storedConsent){
-
 banner.style.display="flex";
-
-}
-else{
-
+}else{
 banner.style.display="none";
-
 sendConsent(storedConsent);
-
 }
 
 });
 
 
-/* --------------------------
-ACCEPT BUTTON
--------------------------- */
+/* ACCEPT COOKIES */
 
 acceptBtn.addEventListener("click",function(){
 
 localStorage.setItem("userConsent","OptIn");
-
 banner.style.display="none";
 
 sendConsent("OptIn");
@@ -67,14 +56,11 @@ sendConsent("OptIn");
 });
 
 
-/* --------------------------
-REJECT BUTTON
--------------------------- */
+/* REJECT COOKIES */
 
 rejectBtn.addEventListener("click",function(){
 
 localStorage.setItem("userConsent","OptOut");
-
 banner.style.display="none";
 
 sendConsent("OptOut");
@@ -82,9 +68,7 @@ sendConsent("OptOut");
 });
 
 
-/* --------------------------
-SEND CONSENT
--------------------------- */
+/* SEND CONSENT */
 
 function sendConsent(status){
 
@@ -98,9 +82,7 @@ provider:"Website"
 
 console.log("Consent Sent:",status);
 
-/* Only start tracking if accepted */
-
-if(status === "OptIn"){
+if(status==="OptIn"){
 initializeTracking();
 }
 
@@ -109,9 +91,7 @@ initializeTracking();
 }
 
 
-/* --------------------------
-INITIALIZE TRACKING
--------------------------- */
+/* INITIALIZE TRACKING */
 
 function initializeTracking(){
 
@@ -133,25 +113,46 @@ sessionId = "session-" + Date.now();
 sessionStorage.setItem("sessionId", sessionId);
 }
 
-/* PAGE VIEW EVENT */
+/* PAGE VIEW */
 
 sendEvent("Page View","webPageView",{});
 
-/* CTA BUTTON EVENTS */
+/* CTA TAB BUTTONS */
 
 document.querySelectorAll(".btn").forEach(btn => {
 
 btn.addEventListener("click",function(){
 
+const interactionName = btn.innerText;
+
+/* ACTIVATE TAB */
+
+document.querySelectorAll(".btn").forEach(b=>b.classList.remove("active"));
+btn.classList.add("active");
+
+/* SEND EVENT */
+
 sendEvent("CTA Click","webClick",{
-buttonName: btn.innerText
+buttonName: interactionName
 });
+
+/* OPEN PROFILE TABLE */
+
+profileTable.style.display="block";
+
+document.getElementById("deviceId").innerText=deviceId;
+document.getElementById("sessionId").innerText=sessionId;
+document.getElementById("sourceUrl").innerText=window.location.href;
+document.getElementById("referrer").innerText=document.referrer || "Direct";
+document.getElementById("interactionName").innerText=interactionName;
+document.getElementById("dateTime").innerText=new Date().toISOString();
 
 });
 
 });
 
-/* LINK CLICK EVENTS */
+
+/* LINK CLICK */
 
 document.querySelectorAll("a").forEach(link => {
 
@@ -166,6 +167,7 @@ linkUrl: link.href
 
 });
 
+
 /* SCROLL DEPTH */
 
 window.addEventListener("scroll",function(){
@@ -174,7 +176,7 @@ let scrollPercent =
 Math.round((window.scrollY /
 (document.body.scrollHeight - window.innerHeight)) * 100);
 
-if(scrollPercent > 50){
+if(scrollPercent>50){
 
 sendEvent("Scroll Depth","webInteraction",{
 scrollDepth: scrollPercent
@@ -183,6 +185,7 @@ scrollDepth: scrollPercent
 }
 
 });
+
 
 /* TAB VISIBILITY */
 
@@ -193,6 +196,7 @@ state: document.visibilityState
 });
 
 });
+
 
 /* PAGE EXIT */
 
@@ -209,9 +213,7 @@ timeOnPage: timeSpent
 }
 
 
-/* --------------------------
-SEND EVENT FUNCTION
--------------------------- */
+/* SEND EVENT */
 
 function sendEvent(name,type,attributes){
 
