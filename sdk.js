@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
 let deviceId;
 let sessionId;
 let pageStartTime = Date.now();
+let trackingInitialized = false;
 
 /* COOKIE BANNER */
 
@@ -35,10 +36,15 @@ console.log("SDK Initialized");
 let storedConsent = localStorage.getItem("userConsent");
 
 if(!storedConsent){
-banner.style.display="flex";
+
+if(banner) banner.style.display="flex";
+
 }else{
-banner.style.display="none";
+
+if(banner) banner.style.display="none";
+
 sendConsent(storedConsent);
+
 }
 
 });
@@ -46,26 +52,36 @@ sendConsent(storedConsent);
 
 /* ACCEPT COOKIES */
 
+if(acceptBtn){
+
 acceptBtn.addEventListener("click",function(){
 
 localStorage.setItem("userConsent","OptIn");
-banner.style.display="none";
+
+if(banner) banner.style.display="none";
 
 sendConsent("OptIn");
 
 });
 
+}
+
 
 /* REJECT COOKIES */
+
+if(rejectBtn){
 
 rejectBtn.addEventListener("click",function(){
 
 localStorage.setItem("userConsent","OptOut");
-banner.style.display="none";
+
+if(banner) banner.style.display="none";
 
 sendConsent("OptOut");
 
 });
+
+}
 
 
 /* SEND CONSENT */
@@ -80,8 +96,6 @@ provider:"Website"
 
 console.log("Consent Sent:", status);
 
-/* Start tracking only if accepted */
-
 if(status === "OptIn"){
 initializeTracking();
 }
@@ -92,6 +106,10 @@ initializeTracking();
 /* INITIALIZE TRACKING */
 
 function initializeTracking(){
+
+if(trackingInitialized) return;
+
+trackingInitialized = true;
 
 /* DEVICE ID */
 
@@ -115,7 +133,8 @@ sessionStorage.setItem("sessionId", sessionId);
 
 sendEvent("Page View","webPageView",{});
 
-/* CTA TAB BUTTONS */
+
+/* CTA BUTTONS */
 
 document.querySelectorAll(".btn").forEach(btn => {
 
@@ -134,7 +153,9 @@ sendEvent("CTA Click","webClick",{
 buttonName: interactionName
 });
 
-/* OPEN PROFILE TABLE */
+/* OPEN TABLE */
+
+if(profileTable){
 
 profileTable.style.display="block";
 
@@ -145,21 +166,7 @@ document.getElementById("referrer").innerText=document.referrer || "Direct";
 document.getElementById("interactionName").innerText=interactionName;
 document.getElementById("dateTime").innerText=new Date().toISOString();
 
-});
-
-});
-
-
-/* LINK CLICK */
-
-document.querySelectorAll("a").forEach(link => {
-
-link.addEventListener("click",function(){
-
-sendEvent("Link Click","webClick",{
-linkText: link.innerText,
-linkUrl: link.href
-});
+}
 
 });
 
@@ -241,4 +248,3 @@ console.log("Event Sent:",name);
 }
 
 });
-
