@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Login</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="sdk.js"></script>
+
+</head>
+
+<body>
+
+<h1>Customer Login</h1>
+
+<input id="email" placeholder="Enter Email">
+
+<button onclick="login()">Login</button>
+
+<script>
+
+function login(){
+
+let email = document.getElementById("email").value;
+
+localStorage.setItem("customerEmail",email);
+
+/* Identity Event */
+
+sendEvent("Customer Login","webInteraction",{
+email:email
+});
+
+alert("Logged in as " + email);
+
+}
+
+</script>
+
+</body>
+
+</html>
