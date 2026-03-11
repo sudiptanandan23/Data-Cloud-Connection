@@ -8,11 +8,11 @@ section { margin-bottom: 2rem; }
 footer { background: #222; color: #fff; text-align: center; padding: 1rem 0; }
 body{
 font-family:Arial;
-background:#f5f7fb;
 text-align:center;
+background:#f5f7fb;
 }
 
-.product-grid{
+.grid{
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:20px;
@@ -35,10 +35,6 @@ border-radius:5px;
 cursor:pointer;
 }
 
-button:hover{
-background:#005bb5;
-}
-
-.cart-link{
-margin:20px;
+.menu a{
+margin:10px;
 }
