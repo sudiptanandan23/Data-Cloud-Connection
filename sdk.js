@@ -73,20 +73,18 @@ sendConsent("OptOut");
 function sendConsent(status){
 
 SalesforceInteractions.updateConsents([{
-
 status: SalesforceInteractions.ConsentStatus[status],
 purpose: SalesforceInteractions.ConsentPurpose.Tracking,
 provider:"Website"
+}]);
 
-}]).then(()=>{
+console.log("Consent Sent:", status);
 
-console.log("Consent Sent:",status);
+/* Start tracking only if accepted */
 
-if(status==="OptIn"){
+if(status === "OptIn"){
 initializeTracking();
 }
-
-});
 
 }
 
@@ -243,3 +241,4 @@ console.log("Event Sent:",name);
 }
 
 });
+
