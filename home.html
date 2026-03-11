@@ -1,23 +1,35 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
-<title>Simple E-Commerce</title>
+<title>Demo Store</title>
+
 <link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.c360a.salesforce.com/beacon/c360a/YOUR-ORG-ID/scripts/c360a.min.js"></script>
+
+<script src="sdk.js"></script>
+<script src="products.js"></script>
 
 </head>
 
 <body>
 
-<h1>My Online Store</h1>
+<h1>Demo Online Store</h1>
 
-<div class="cart-link">
-<a href="cart.html">View Cart 🛒</a>
+<div class="menu">
+
+<a href="cart.html">Cart</a>
+<a href="login.html">Login</a>
+
 </div>
 
-<div id="productList" class="product-grid"></div>
+<div id="productList" class="grid"></div>
 
-<script src="app.js"></script>
+<script>
+loadProducts();
+</script>
 
 </body>
 </html>
