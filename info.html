@@ -6,6 +6,8 @@
 
 <!-- Salesforce Data Cloud SDK -->
 <script src="https://cdn.c360a.salesforce.com/beacon/c360a/37350531-11e8-4591-a7b6-643ba484d8c5/scripts/c360a.min.js"></script>
+
+<!-- Custom SDK Logic -->
 <script src="sdk.js"></script>
 
 <style>
@@ -61,32 +63,6 @@ th{
 
 </style>
 
-<script>
-
-SalesforceInteractions.setLoggingLevel("DEBUG");
-
-/* Initialize SDK */
-
-SalesforceInteractions.init({
-
-cookieDomain: ".github.io",
-
-consents:[
-{
-status: SalesforceInteractions.ConsentStatus.OptIn,
-purpose: SalesforceInteractions.ConsentPurpose.Tracking,
-provider:"Website"
-}
-]
-
-}).then(()=>{
-
-console.log("Salesforce Data Cloud SDK initialized");
-
-});
-
-</script>
-
 </head>
 
 <body>
@@ -103,123 +79,17 @@ console.log("Salesforce Data Cloud SDK initialized");
 
 <table>
 
-<tr>
-<th>Field</th>
-<th>Value</th>
-</tr>
-
-<tr>
-<td>Device ID</td>
-<td id="deviceId"></td>
-</tr>
-
-<tr>
-<td>Session ID</td>
-<td id="sessionId"></td>
-</tr>
-
-<tr>
-<td>Page URL</td>
-<td id="sourceUrl"></td>
-</tr>
-
-<tr>
-<td>Referrer</td>
-<td id="referrer"></td>
-</tr>
-
-<tr>
-<td>Interaction</td>
-<td id="interactionName"></td>
-</tr>
-
-<tr>
-<td>Date Time</td>
-<td id="dateTime"></td>
-</tr>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>Device ID</td><td id="deviceId"></td></tr>
+<tr><td>Session ID</td><td id="sessionId"></td></tr>
+<tr><td>Page URL</td><td id="sourceUrl"></td></tr>
+<tr><td>Referrer</td><td id="referrer"></td></tr>
+<tr><td>Interaction</td><td id="interactionName"></td></tr>
+<tr><td>Date Time</td><td id="dateTime"></td></tr>
 
 </table>
 
 </div>
-
-<script>
-
-/* Wait until DOM is ready */
-
-document.addEventListener("DOMContentLoaded", function(){
-
-function trackCTA(event){
-
-const button = event.target;
-const interactionName = button.innerText;
-const eventId = button.id;
-
-/* Toggle active tab */
-
-document.querySelectorAll(".btn").forEach(btn=>{
-btn.classList.remove("active");
-});
-
-button.classList.add("active");
-
-/* Generate device/session IDs */
-
-let deviceId = localStorage.getItem("deviceId");
-if(!deviceId){
-deviceId = "device-" + Date.now();
-localStorage.setItem("deviceId",deviceId);
-}
-
-let sessionId = sessionStorage.getItem("sessionId");
-if(!sessionId){
-sessionId = "session-" + Date.now();
-sessionStorage.setItem("sessionId",sessionId);
-}
-
-const dateTime = new Date().toISOString();
-
-/* Send event to Data Cloud */
-
-SalesforceInteractions.sendEvent({
-
-interaction:{
-name:"CTA_Click"
-},
-
-eventId:eventId,
-deviceId:deviceId,
-sessionId:sessionId,
-interactionName:interactionName,
-sourceUrl:window.location.href,
-sourceUrlReferrer:document.referrer,
-dateTime:dateTime
-
-});
-
-console.log("CTA Event Sent");
-
-/* Show profile table */
-
-document.getElementById("profileTable").style.display="block";
-
-document.getElementById("deviceId").innerText=deviceId;
-document.getElementById("sessionId").innerText=sessionId;
-document.getElementById("sourceUrl").innerText=window.location.href;
-document.getElementById("referrer").innerText=document.referrer || "Direct";
-document.getElementById("interactionName").innerText=interactionName;
-document.getElementById("dateTime").innerText=dateTime;
-
-}
-
-/* Add click listeners */
-
-document.getElementById("ctaGoogle").addEventListener("click",trackCTA);
-document.getElementById("ctaYahoo").addEventListener("click",trackCTA);
-document.getElementById("ctaBing").addEventListener("click",trackCTA);
-
-});
-
-</script>
 
 </body>
 </html>
