@@ -23,6 +23,18 @@ provider:"Website"
 
 console.log("Salesforce Data Cloud SDK initialized");
 
+/* ALWAYS SEND CONSENT */
+
+SalesforceInteractions.updateConsents([
+{
+status: SalesforceInteractions.ConsentStatus.OptIn,
+purpose: SalesforceInteractions.ConsentPurpose.Tracking,
+provider:"Website"
+}
+]);
+
+console.log("Consent Sent to Data Cloud");
+
 /* Generate device ID */
 
 deviceId = localStorage.getItem("deviceId");
@@ -80,7 +92,7 @@ button.classList.add("active");
 
 const dateTime = new Date().toISOString();
 
-/* Send event */
+/* Send CTA Event */
 
 SalesforceInteractions.sendEvent({
 
