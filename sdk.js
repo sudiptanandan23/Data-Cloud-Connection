@@ -5,6 +5,14 @@ document.addEventListener("DOMContentLoaded", function () {
 let deviceId;
 let sessionId;
 
+/* COOKIE BANNER ELEMENTS */
+
+const banner = document.getElementById("cookieBanner");
+const acceptBtn = document.getElementById("acceptCookies");
+const rejectBtn = document.getElementById("rejectCookies");
+
+let userConsent = localStorage.getItem("userConsent");
+
 /* Initialize SDK */
 
 SalesforceInteractions.init({
@@ -13,7 +21,7 @@ cookieDomain: "sudiptanandan23.github.io",
 
 consents:[
 {
-status: SalesforceInteractions.ConsentStatus.OptIn,
+status: SalesforceInteractions.ConsentStatus.OptOut,
 purpose: SalesforceInteractions.ConsentPurpose.Tracking,
 provider:"Website"
 }
@@ -23,17 +31,58 @@ provider:"Website"
 
 console.log("Salesforce Data Cloud SDK initialized");
 
-/* ALWAYS SEND CONSENT */
+/* SHOW COOKIE BANNER IF NO CONSENT */
+
+if(!userConsent){
+banner.style.display="flex";
+}else{
+banner.style.display="none";
+
+if(userConsent === "accepted"){
+sendConsent("OptIn");
+}else{
+sendConsent("OptOut");
+}
+
+}
+
+/* ACCEPT COOKIES */
+
+acceptBtn.addEventListener("click",function(){
+
+localStorage.setItem("userConsent","accepted");
+banner.style.display="none";
+
+sendConsent("OptIn");
+
+});
+
+/* REJECT COOKIES */
+
+rejectBtn.addEventListener("click",function(){
+
+localStorage.setItem("userConsent","rejected");
+banner.style.display="none";
+
+sendConsent("OptOut");
+
+});
+
+});
+
+/* FUNCTION TO SEND CONSENT */
+
+function sendConsent(status){
 
 SalesforceInteractions.updateConsents([
 {
-status: SalesforceInteractions.ConsentStatus.OptIn,
+status: SalesforceInteractions.ConsentStatus[status],
 purpose: SalesforceInteractions.ConsentPurpose.Tracking,
 provider:"Website"
 }
 ]);
 
-console.log("Consent Sent to Data Cloud");
+console.log("Consent Sent:",status);
 
 /* Generate device ID */
 
@@ -82,8 +131,6 @@ function trackCTA(event){
 const button = event.target;
 const interactionName = button.innerText;
 
-/* Toggle active tab */
-
 document.querySelectorAll(".btn").forEach(btn=>{
 btn.classList.remove("active");
 });
@@ -91,8 +138,6 @@ btn.classList.remove("active");
 button.classList.add("active");
 
 const dateTime = new Date().toISOString();
-
-/* Send CTA Event */
 
 SalesforceInteractions.sendEvent({
 
@@ -137,6 +182,6 @@ document.getElementById("ctaGoogle").addEventListener("click",trackCTA);
 document.getElementById("ctaYahoo").addEventListener("click",trackCTA);
 document.getElementById("ctaBing").addEventListener("click",trackCTA);
 
-});
+}
 
 });
