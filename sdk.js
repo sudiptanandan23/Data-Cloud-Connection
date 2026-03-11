@@ -1,6 +1,11 @@
-SalesforceInteractions.setLoggingLevel("DEBUG");
-
 document.addEventListener("DOMContentLoaded", function () {
+
+if (typeof SalesforceInteractions === "undefined") {
+console.error("SalesforceInteractions SDK not loaded");
+return;
+}
+
+SalesforceInteractions.setLoggingLevel("DEBUG");
 
 let deviceId;
 let sessionId;
@@ -42,7 +47,6 @@ if(banner) banner.style.display="flex";
 }else{
 
 if(banner) banner.style.display="none";
-
 sendConsent(storedConsent);
 
 }
@@ -131,10 +135,10 @@ sessionStorage.setItem("sessionId", sessionId);
 
 /* PAGE VIEW */
 
-sendEvent("Page View","webPageView",{});
+window.sendEvent("Page View","webPageView",{});
 
 
-/* CTA BUTTONS */
+/* CTA BUTTON EVENTS */
 
 document.querySelectorAll(".btn").forEach(btn => {
 
@@ -149,11 +153,11 @@ btn.classList.add("active");
 
 /* SEND EVENT */
 
-sendEvent("CTA Click","webClick",{
+window.sendEvent("CTA Click","webClick",{
 buttonName: interactionName
 });
 
-/* OPEN TABLE */
+/* OPEN PROFILE TABLE */
 
 if(profileTable){
 
@@ -181,9 +185,9 @@ let scrollPercent =
 Math.round((window.scrollY /
 (document.body.scrollHeight - window.innerHeight)) * 100);
 
-if(scrollPercent>50){
+if(scrollPercent > 50){
 
-sendEvent("Scroll Depth","webInteraction",{
+window.sendEvent("Scroll Depth","webInteraction",{
 scrollDepth: scrollPercent
 });
 
@@ -196,7 +200,7 @@ scrollDepth: scrollPercent
 
 document.addEventListener("visibilitychange",function(){
 
-sendEvent("Tab Visibility","webInteraction",{
+window.sendEvent("Tab Visibility","webInteraction",{
 state: document.visibilityState
 });
 
@@ -209,7 +213,7 @@ window.addEventListener("beforeunload",function(){
 
 let timeSpent = Math.round((Date.now() - pageStartTime)/1000);
 
-sendEvent("Page Exit","webInteraction",{
+window.sendEvent("Page Exit","webInteraction",{
 timeOnPage: timeSpent
 });
 
@@ -218,9 +222,14 @@ timeOnPage: timeSpent
 }
 
 
-/* SEND EVENT */
+/* GLOBAL EVENT FUNCTION */
 
-function sendEvent(name,type,attributes){
+window.sendEvent = function(name,type,attributes){
+
+if(typeof SalesforceInteractions === "undefined"){
+console.warn("SDK not ready");
+return;
+}
 
 SalesforceInteractions.sendEvent({
 
@@ -234,7 +243,7 @@ category:"Engagement",
 deviceId:deviceId,
 sessionId:sessionId,
 
-attributes:attributes,
+attributes:attributes || {},
 
 sourceUrl:window.location.href,
 sourceUrlReferrer:document.referrer,
@@ -245,6 +254,6 @@ dateTime:new Date().toISOString()
 
 console.log("Event Sent:",name);
 
-}
+};
 
 });
