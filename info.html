@@ -11,7 +11,37 @@
 <script src="sdk.js"></script>
 
 <style>
+.cookie-banner{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:#1f2d3d;
+color:white;
+padding:15px;
+display:flex;
+justify-content:center;
+align-items:center;
+gap:20px;
+z-index:9999;
+}
 
+.cookie-btn{
+padding:8px 16px;
+border:none;
+cursor:pointer;
+border-radius:4px;
+}
+
+.accept{
+background:#28a745;
+color:white;
+}
+
+.reject{
+background:#dc3545;
+color:white;
+}
 body{
     font-family: Arial, sans-serif;
     background:#f5f7fb;
@@ -90,6 +120,13 @@ th{
 </table>
 
 </div>
+<div id="cookieBanner" class="cookie-banner">
+  <p>
+    This website uses cookies for tracking and analytics.
+  </p>
 
+  <button id="acceptCookies" class="cookie-btn accept">Accept</button>
+  <button id="rejectCookies" class="cookie-btn reject">Reject</button>
+</div>
 </body>
 </html>
