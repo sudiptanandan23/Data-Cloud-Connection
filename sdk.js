@@ -9,7 +9,7 @@ let sessionId;
 
 SalesforceInteractions.init({
 
-cookieDomain: ".github.io",
+cookieDomain: "sudiptanandan23.github.io",
 
 consents:[
 {
@@ -63,14 +63,14 @@ dateTime:new Date().toISOString()
 
 console.log("Page View Event Sent");
 
-});
-
 /* CTA CLICK EVENT */
 
 function trackCTA(event){
 
 const button = event.target;
 const interactionName = button.innerText;
+
+/* Toggle active tab */
 
 document.querySelectorAll(".btn").forEach(btn=>{
 btn.classList.remove("active");
@@ -79,6 +79,8 @@ btn.classList.remove("active");
 button.classList.add("active");
 
 const dateTime = new Date().toISOString();
+
+/* Send event */
 
 SalesforceInteractions.sendEvent({
 
@@ -102,7 +104,9 @@ dateTime:dateTime
 
 });
 
-/* Show profile table */
+console.log("CTA Event Sent");
+
+/* Update UI */
 
 document.getElementById("profileTable").style.display="block";
 
@@ -113,14 +117,14 @@ document.getElementById("referrer").innerText=document.referrer || "Direct";
 document.getElementById("interactionName").innerText=interactionName;
 document.getElementById("dateTime").innerText=dateTime;
 
-console.log("CTA Event Sent");
-
 }
 
-/* Add button listeners */
+/* Attach Button Listeners */
 
 document.getElementById("ctaGoogle").addEventListener("click",trackCTA);
 document.getElementById("ctaYahoo").addEventListener("click",trackCTA);
 document.getElementById("ctaBing").addEventListener("click",trackCTA);
+
+});
 
 });
