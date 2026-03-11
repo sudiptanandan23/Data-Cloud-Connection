@@ -7,6 +7,14 @@ let sessionId;
 let pageStartTime = Date.now();
 
 /* --------------------------
+COOKIE BANNER ELEMENTS
+-------------------------- */
+
+const banner = document.getElementById("cookieBanner");
+const acceptBtn = document.getElementById("acceptCookies");
+const rejectBtn = document.getElementById("rejectCookies");
+
+/* --------------------------
 INITIALIZE SDK
 -------------------------- */
 
@@ -24,21 +32,81 @@ provider:"Website"
 
 console.log("SDK Initialized");
 
-/* AUTO CONSENT FOR DEMO */
+/* CHECK STORED CONSENT */
+
+let storedConsent = localStorage.getItem("userConsent");
+
+if(!storedConsent){
+
+banner.style.display="flex";
+
+}
+else{
+
+banner.style.display="none";
+
+sendConsent(storedConsent);
+
+}
+
+});
+
+
+/* --------------------------
+ACCEPT BUTTON
+-------------------------- */
+
+acceptBtn.addEventListener("click",function(){
+
+localStorage.setItem("userConsent","OptIn");
+
+banner.style.display="none";
+
+sendConsent("OptIn");
+
+});
+
+
+/* --------------------------
+REJECT BUTTON
+-------------------------- */
+
+rejectBtn.addEventListener("click",function(){
+
+localStorage.setItem("userConsent","OptOut");
+
+banner.style.display="none";
+
+sendConsent("OptOut");
+
+});
+
+
+/* --------------------------
+SEND CONSENT
+-------------------------- */
+
+function sendConsent(status){
 
 SalesforceInteractions.updateConsents([{
-status: SalesforceInteractions.ConsentStatus.OptIn,
+
+status: SalesforceInteractions.ConsentStatus[status],
 purpose: SalesforceInteractions.ConsentPurpose.Tracking,
 provider:"Website"
+
 }]).then(()=>{
 
-console.log("Consent Sent");
+console.log("Consent Sent:",status);
 
+/* Only start tracking if accepted */
+
+if(status === "OptIn"){
 initializeTracking();
+}
 
 });
 
-});
+}
 
 
 /* --------------------------
@@ -65,7 +133,7 @@ sessionId = "session-" + Date.now();
 sessionStorage.setItem("sessionId", sessionId);
 }
 
-/* PAGE VIEW */
+/* PAGE VIEW EVENT */
 
 sendEvent("Page View","webPageView",{});
 
@@ -120,7 +188,7 @@ scrollDepth: scrollPercent
 
 document.addEventListener("visibilitychange",function(){
 
-sendEvent("Tab Visibility Change","webInteraction",{
+sendEvent("Tab Visibility","webInteraction",{
 state: document.visibilityState
 });
 
